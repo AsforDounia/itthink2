@@ -29,17 +29,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
             $projets = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $_SESSION['projets'] = $projets;
 
-            $queryFreeLances = "SELECT * FROM freelances ";
+            $queryFreeLances = "SELECT * FROM freelances INNER JOIN utilisateurs ON freelances.id_utilisateur = utilisateurs.id_utilisateur ";
             $stmt = $pdo->prepare($queryFreeLances);
             $stmt->execute();
             $FreeLances = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $_SESSION['FreeLances'] = $FreeLances;
 
-            $queryOffres = "SELECT * FROM offres ";
+            $queryOffres = "SELECT * FROM Offres ";
             $stmt = $pdo->prepare($queryOffres);
             $stmt->execute();
             $Offres = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $_SESSION['Offres'] = $Offres;
+
+            $queryCategories = "SELECT * FROM Categories ";
+            $stmt = $pdo->prepare($queryCategories);
+            $stmt->execute();
+            $Categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $_SESSION['Categories'] = $Categories;
+
+
+            $querySous_Categories = "SELECT * FROM souscategories INNER JOIN categories on souscategories.id_categorie = categories.id_categorie";
+            $stmt = $pdo->prepare($querySous_Categories);
+            $stmt->execute();
+            $Sous_Categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $_SESSION['Sous_Categories'] = $Sous_Categories;
+
+
+            $querytemoignages = "SELECT * FROM temoignages INNER JOIN utilisateurs ON temoignages.id_utilisateur = utilisateurs.id_utilisateur ";
+            $stmt = $pdo->prepare($querytemoignages);
+            $stmt->execute();
+            $temoignages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $_SESSION['temoignages'] = $temoignages;
 
 
             header('Location: admin.php');

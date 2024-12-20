@@ -21,7 +21,7 @@
 
 
         <div id="register-form" class="container h-[93%] max-w-lg p-6 pl-16 bg-white shadow-r-md rounded-r-lg flex flex-col  justify-center ">
-        <div class="flex flex-col items-center">
+            <div class="flex flex-col items-center">
                 <img src="img/ItThinkBrain.png" alt="" class="w-1/5">
                 <h2 class="text-2xl font-bold text-center text-gray-800 mb-6"><span class="text-slate-400">welcome to </span><span class="text-[#FF5743]">It</span>Think</h2>
             </div>
