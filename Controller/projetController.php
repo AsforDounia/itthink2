@@ -22,8 +22,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmtp->execute();
         $projets = $stmtp->fetchAll(PDO::FETCH_ASSOC);
         $_SESSION['projets'] = $projets;
-        
-        header('Location: ../admin.php?page=projets');
+        if($_SESSION['user_role'] == "admin"){
+            header('Location: ../admin.php?page=projets');
+        }
+        else{
+
+            $stmt = $pdo->prepare("SELECT * FROM Projets WHERE id_utilisateur = :id_utilisateur");
+            $stmt->execute(['id_utilisateur' => $_SESSION['user_id']]);
+
+            $projets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $_SESSION['userProjets'] = $projets;
+            header('Location: ../user.php?page=projets');
+
+        }
     }
     if(isset($_POST['id_projet'])){
         $id_projet = $_POST['id_projet'];
@@ -33,7 +44,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $project_data = $stmt->fetch();
                 if ($project_data) {
                     $project_param = http_build_query(['project_data' => json_encode($project_data)]);
-                    header("Location: ../admin.php?$project_param");
+                    if($_SESSION['user_role'] == "admin"){
+                        header("Location: ../admin.php?$project_param");
+                    }
+                    else{
+                        $stmt = $pdo->prepare("SELECT * FROM Projets WHERE id_utilisateur = :id_utilisateur");
+                        $stmt->execute(['id_utilisateur' => $_SESSION['user_id']]);
+            
+                        $projets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        $_SESSION['userProjets'] = $projets;
+                        header("Location: ../user.php?$project_param");
+
+                    }
                 } else {
                     echo "Aucun utilisateur trouvé avec cet ID.";
                 }
@@ -50,7 +72,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->execute();
             $projets = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $_SESSION['projets'] = $projets;
-            header('Location: ../admin.php?page=projets');
+                       
+            if($_SESSION['user_role'] == "admin"){
+                header('Location: ../admin.php?page=projets');
+            }
+            else{
+                $stmt = $pdo->prepare("SELECT * FROM Projets WHERE id_utilisateur = :id_utilisateur");
+                $stmt->execute(['id_utilisateur' => $_SESSION['user_id']]);
+
+                $projets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $_SESSION['userProjets'] = $projets;
+                header('Location: ../user.php?page=projets');
+            }
 
         }
         if(isset($_POST['modifierProject'])){
@@ -72,7 +105,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $stmt->execute();
                     $projets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     $_SESSION['projets'] = $projets;
-                    header("Location: ../admin.php?page=projets");
+
+                    if($_SESSION['user_role'] == "admin"){
+                        header('Location: ../admin.php?page=projets');
+                    }
+                    else{
+                        $stmt = $pdo->prepare("SELECT * FROM Projets WHERE id_utilisateur = :id_utilisateur");
+                        $stmt->execute(['id_utilisateur' => $_SESSION['user_id']]);
+
+                        $projets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        $_SESSION['userProjets'] = $projets;
+                        header('Location: ../user.php?page=projets');
+                    }
+                    
                     exit;
                 } else {
                     echo "Erreur lors de la modification du projet.";
@@ -84,7 +129,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     }
     if(isset($_POST['annuler'])){
-        header('Location: ../admin.php?page=projets');
+        if($_SESSION['user_role'] == "admin"){
+            header('Location: ../admin.php?page=projets');
+        }
+        else{
+            $stmt = $pdo->prepare("SELECT * FROM Projets WHERE id_utilisateur = :id_utilisateur");
+            $stmt->execute(['id_utilisateur' => $_SESSION['user_id']]);
+
+            $projets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $_SESSION['userProjets'] = $projets;
+            header('Location: ../user.php?page=projets');
+        }
     }
 }
 ?>

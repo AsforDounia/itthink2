@@ -1,5 +1,7 @@
 <?php
 require_once 'config.php';
+session_start();
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     $email = $_POST['email'];
@@ -11,29 +13,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+
+
+
+
+
+
+
+
+
+
+
+
     if ($user && password_verify($password, $user['mot_de_passe'])) {
-        session_start();
+
         $_SESSION['user_id'] = $user['id_utilisateur'];
         $_SESSION['email'] = $email;
         $_SESSION['user_role'] = $user['user_role'];
-        if ($user['user_role'] === 'admin') {
+
+
+
+        $queryCategories = "SELECT * FROM Categories ";
+        $stmt = $pdo->prepare($queryCategories);
+        $stmt->execute();
+        $Categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $_SESSION['Categories'] = $Categories;
+    
+    
+        $querySous_Categories = "SELECT * FROM souscategories INNER JOIN categories on souscategories.id_categorie = categories.id_categorie";
+        $stmt = $pdo->prepare($querySous_Categories);
+        $stmt->execute();
+        $Sous_Categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $_SESSION['Sous_Categories'] = $Sous_Categories;
+    
+    
+    
+        $queryFreeLances = "SELECT * FROM freelances INNER JOIN utilisateurs ON freelances.id_utilisateur = utilisateurs.id_utilisateur ";
+        $stmt = $pdo->prepare($queryFreeLances);
+        $stmt->execute();
+        $FreeLances = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $_SESSION['FreeLances'] = $FreeLances;
+
+
+        $queryProjets = "SELECT * FROM Projets INNER JOIN utilisateurs on Projets.id_utilisateur = utilisateurs.id_utilisateur";
+        $stmt = $pdo->prepare($queryProjets);
+        $stmt->execute();
+        $projets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $_SESSION['projets'] = $projets;
+
+        if ($user['user_role'] == 'admin') {
             $queryUsers = "SELECT * FROM utilisateurs ";
             $stmt = $pdo->prepare($queryUsers);
             $stmt->execute();
             $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $_SESSION['users'] = $users;
 
-            $queryProjets = "SELECT * FROM Projets ";
-            $stmt = $pdo->prepare($queryProjets);
-            $stmt->execute();
-            $projets = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $_SESSION['projets'] = $projets;
 
-            $queryFreeLances = "SELECT * FROM freelances INNER JOIN utilisateurs ON freelances.id_utilisateur = utilisateurs.id_utilisateur ";
-            $stmt = $pdo->prepare($queryFreeLances);
-            $stmt->execute();
-            $FreeLances = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $_SESSION['FreeLances'] = $FreeLances;
+
+
 
             $queryOffres = "SELECT * FROM Offres ";
             $stmt = $pdo->prepare($queryOffres);
@@ -41,18 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
             $Offres = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $_SESSION['Offres'] = $Offres;
 
-            $queryCategories = "SELECT * FROM Categories ";
-            $stmt = $pdo->prepare($queryCategories);
-            $stmt->execute();
-            $Categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $_SESSION['Categories'] = $Categories;
 
-
-            $querySous_Categories = "SELECT * FROM souscategories INNER JOIN categories on souscategories.id_categorie = categories.id_categorie";
-            $stmt = $pdo->prepare($querySous_Categories);
-            $stmt->execute();
-            $Sous_Categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $_SESSION['Sous_Categories'] = $Sous_Categories;
 
 
             $querytemoignages = "SELECT * FROM temoignages INNER JOIN utilisateurs ON temoignages.id_utilisateur = utilisateurs.id_utilisateur ";
@@ -64,6 +90,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
 
             header('Location: admin.php');
         } else {
+            $stmt = $pdo->prepare("SELECT * FROM Projets WHERE id_utilisateur = :id_utilisateur");
+            $stmt->execute(['id_utilisateur' => $_SESSION['user_id']]);
+
+            $projets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $_SESSION['userProjets'] = $projets;
             header('Location: user.php');
         }
         exit;

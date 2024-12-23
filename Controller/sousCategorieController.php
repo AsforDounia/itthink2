@@ -25,15 +25,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         header('Location: ../admin.php?page=Sous_Categories');
     }
-    if(isset($_POST['id_categorie'])){
-        $id_categorie = $_POST['id_categorie'];
-        if(isset($_POST['modifierCategory'])){
-            $stmt = $pdo->prepare('SELECT * FROM Categories WHERE id_categorie = :id');
-            if ($stmt->execute(['id' => $id_categorie])) {
-                $category_data = $stmt->fetch();
-                if ($category_data) {
-                    $category_param = http_build_query(['category_data' => json_encode($category_data)]);
-                    header("Location: ../admin.php?$category_param");
+    
+    if(isset($_POST['sous_categorie_id'])){
+        $sous_categorie_id = $_POST['sous_categorie_id'];
+
+
+        if(isset($_POST['modifierSousCategoies'])){
+            echo "$sous_categorie_id";
+            $stmt = $pdo->prepare('SELECT * FROM souscategories WHERE id_sous_categorie = :id');
+            if ($stmt->execute(['id' => $sous_categorie_id])) {
+                $sous_category_data = $stmt->fetch();
+                if ($sous_category_data) {
+                    $sous_category_param = http_build_query(['sous_category_data' => json_encode($sous_category_data)]);
+                    header("Location: ../admin.php?$sous_category_param");
                 } else {
                     echo "Aucun utilisateur trouvé avec cet ID.";
                 }
@@ -41,49 +45,51 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 echo "Erreur lors de la récupération des données.";
             }
         }
-        if(isset($_POST['supprimerCategory'])){
-            $stmDeleteProjet = $pdo->prepare("DELETE FROM Categories WHERE id_categorie = :id");
-            $stmDeleteProjet->execute(['id' => $id_categorie]);
+        if(isset($_POST['supprimerSousCategoies'])){
+            $stmDeleteProjet = $pdo->prepare("DELETE FROM souscategories WHERE id_sous_categorie = :id");
+            $stmDeleteProjet->execute(['id' => $sous_categorie_id]);
 
-            $queryCategories = "SELECT * FROM Categories ";
-            $stmt = $pdo->prepare($queryCategories);
+            $querySousCategories = "SELECT * FROM souscategories INNER JOIN categories ON souscategories.id_categorie = categories.id_categorie";
+            $stmt = $pdo->prepare($querySousCategories);
             $stmt->execute();
-            $Categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $_SESSION['Categories'] = $Categories;
-            header('Location: ../admin.php?page=Categories');
+
+            $_SESSION['Sous_Categories'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            header("Location: ../admin.php?page=Sous_Categories");
+            exit;
+
 
         }
-        if(isset($_POST['confirmModifierCategory'])){
+        if(isset($_POST['confirmModifierSousCategory'])){
+            if (isset($_POST['sous_categorie_id'], $_POST['name_souscategory_modify'], $_POST['select_category_sousCat'])) {
 
-            if (isset($_POST['id_categorie'], $_POST['name_category_modify'])) {
+                $id_categorie = $_POST['select_category_sousCat'];
+                $nom_sous_categorie = $_POST['name_souscategory_modify'];
+                $sous_categorie_id = $_POST['sous_categorie_id'];
 
-                $id_categorie = $_POST['id_categorie'];
+                $stmt = $pdo->prepare('UPDATE souscategories SET nom_sous_categorie = :nom_sous_categorie, id_categorie = :id_categorie WHERE id_sous_categorie = :id_sous_categorie');
 
-                $nom_categorie = $_POST['name_category_modify'];
-
-                $stmt = $pdo->prepare('UPDATE categories SET nom_categorie = :nom_categorie WHERE id_categorie = :id_categorie');
-
-                if ($stmt->execute(['nom_categorie' => $nom_categorie,'id_categorie' => $id_categorie])){
-                    
-                    $queryCategories = "SELECT * FROM Categories ";
-                    $stmt = $pdo->prepare($queryCategories);
+                if ($stmt->execute(['nom_sous_categorie' => $nom_sous_categorie,'id_categorie' => $id_categorie,'id_sous_categorie' => $sous_categorie_id])) {
+                    $querySousCategories = "SELECT * FROM souscategories INNER JOIN categories ON souscategories.id_categorie = categories.id_categorie";
+                    $stmt = $pdo->prepare($querySousCategories);
                     $stmt->execute();
-                    $Categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                    $_SESSION['Categories'] = $Categories;
 
-                    header("Location: ../admin.php?page=Categories");
+                    $_SESSION['Sous_Categories'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                    header("Location: ../admin.php?page=Sous_Categories");
                     exit;
                 } else {
-                    echo "Erreur lors de la modification du projet.";
+                    echo "Erreur : la mise à jour de la sous-catégorie a échoué.";
                 }
             } else {
-                echo "Des données manquent pour effectuer la modification.";
+                echo "Erreur : données manquantes pour effectuer la modification.";
             }
+
         }
 
     }
     if(isset($_POST['annuler'])){
-        header('Location: ../admin.php?page=Categories');
+        header('Location: ../admin.php?page=Sous_Categories');
     }
 }
 ?>

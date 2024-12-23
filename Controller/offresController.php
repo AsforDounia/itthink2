@@ -6,22 +6,27 @@ require_once '../config.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // if(isset($_POST['Ajouter_Offre'])){
+    if(isset($_POST['Soumettre_Offre'])){
+        $mantant = (float)$_POST['montant'];
+        $Soumettre_Offre = "INSERT INTO Offres (montant,delai, id_freelance,id_projet) VALUES (:montant, :delai, :id_freelance, :id_projet)";
+
+        $stmt = $pdo->prepare($Soumettre_Offre);
+        $stmt->bindParam(':montant', $mantant );
+        $stmt->bindParam(':delai', $_POST['delai']);
+        $stmt->bindParam(':id_freelance', $_SESSION['id_freelance']);
+        $stmt->bindParam(':id_projet', $_POST['id_projet']);
+        $stmt->execute();
         
-    //     $query = "INSERT INTO freelances (competences, id_utilisateur) VALUES (:competences, :id_utilisateur)";
-    //     $stmt = $pdo->prepare($query);
-    //     $stmt->bindParam(':competences', $_POST['competences']);
-    //     $stmt->bindParam(':id_utilisateur', $_POST['user_select']);
-    //     $stmt->execute();
+        // $queryFreeLances = "SELECT * FROM freelances INNER JOIN utilisateurs ON freelances.id_utilisateur = utilisateurs.id_utilisateur ";
+        // $stmtp = $pdo->prepare($queryFreeLances);
+        // $stmtp->execute();
+        // $FreeLances = $stmtp->fetchAll(PDO::FETCH_ASSOC);
+        // $_SESSION['FreeLances'] = $FreeLances;
         
-    //     $queryFreeLances = "SELECT * FROM freelances INNER JOIN utilisateurs ON freelances.id_utilisateur = utilisateurs.id_utilisateur ";
-    //     $stmtp = $pdo->prepare($queryFreeLances);
-    //     $stmtp->execute();
-    //     $FreeLances = $stmtp->fetchAll(PDO::FETCH_ASSOC);
-    //     $_SESSION['FreeLances'] = $FreeLances;
-        
-    //     header('Location: ../admin.php?page=freelances');
-    // }
+        header('Location: ../freelance.php?page=freelances');
+    }
+
+
     if(isset($_POST['id_Offre'])){
         $id_Offre = $_POST['id_Offre'];
         

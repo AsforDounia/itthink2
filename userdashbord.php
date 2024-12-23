@@ -60,49 +60,13 @@
 
       <!-- Section des cartes -->
       <section class="grid grid-cols-4 gap-6 mb-8 ">
-        <div class="bg-yellow-200 py-4 px-4 rounded-lg text-center flex flex-col items-center cursor-pointer relative group">
-          <h2 class="text-xl font-semibold mb-4">Nombre total d'utilisateurs</h2>
-          <div class="font-bold text-3xl"><?php echo count($_SESSION['users']) ;?></div>
-          <button onclick="return gestion('users')" class="bg-yellow-200 p-2 rounded-md absolute w-full h-full top-0 hidden group-hover:block text-black text-xl font-bold">Gestion des Utilisateurs</button>
-        </div>
         <div class="bg-purple-300 py-4 p-4 rounded-lg text-center flex flex-col items-center cursor-pointer relative group">
           <h2 class="text-xl font-semibold mb-4">Nombre total des projets</h2>
           <div class="font-bold text-3xl"><?php echo count($_SESSION['projets']) ; ?></div>
           <button onclick="return gestion('projets')" class="bg-purple-300 p-2 rounded-md absolute w-full h-full top-0 hidden group-hover:block text-black text-xl font-bold">Gestion des Projets</button>
 
         </div>
-        <div class="bg-rose-100 py-4 p-4 rounded-lg text-center flex flex-col items-center cursor-pointer relative group">
-          <h2 class="text-xl font-semibold mb-4">Nombre total des freelances</h2>
-          <div class="font-bold text-3xl"><?php echo count($_SESSION['FreeLances']) ; ?></div>
-          <button onclick="return gestion('freelances')" class="bg-rose-100 p-2 rounded-md absolute w-full h-full top-0 hidden group-hover:block text-black text-xl font-bold">Gestion des Freelances</button>
 
-        </div>
-        <div class="bg-cyan-200 py-4 p-4 rounded-lg text-center flex flex-col items-center cursor-pointer relative group">
-          <h2 class="text-xl font-semibold mb-4">Nombre total des Offres</h2>
-          <div class="font-bold text-3xl"><?php echo count($_SESSION['Offres']) ; ?></div>
-          <button onclick="return gestion('Offres')" class="bg-cyan-200 p-2 rounded-md absolute w-full h-full top-0 hidden group-hover:block text-black text-xl font-bold">Gestion des Offres</button>
-
-        </div>
-        <div class="bg-cyan-200 py-4 p-4 rounded-lg text-center flex flex-col items-center cursor-pointer relative group">
-          <h2 class="text-xl font-semibold mb-4">Nombre des Categories</h2>
-          <div class="font-bold text-3xl"><?php echo count($_SESSION['Categories']) ; ?></div>
-          <button onclick="return gestion('Categories')" class="bg-cyan-200 p-2 rounded-md absolute w-full h-full top-0 hidden group-hover:block text-black text-xl font-bold">Gestion des Categories</button>
-
-        </div>
-
-        <div class="bg-rose-100 py-4 p-4 rounded-lg text-center flex flex-col items-center cursor-pointer relative group">
-          <h2 class="text-xl font-semibold mb-4">Nombre des Sous Categories</h2>
-          <div class="font-bold text-3xl"><?php echo count($_SESSION['Sous_Categories']) ; ?></div>
-          <button onclick="return gestion('Sous_Categories')" class="bg-cyan-200 p-2 rounded-md absolute w-full h-full top-0 hidden group-hover:block text-black text-xl font-bold">Gestion des Sous_Categories</button>
-
-        </div>
-
-        <div class="bg-rose-100 py-4 p-4 rounded-lg text-center flex flex-col items-center cursor-pointer relative group">
-          <h2 class="text-xl font-semibold mb-4">Nombre des temoignages</h2>
-          <div class="font-bold text-3xl"><?php echo count($_SESSION['temoignages']) ; ?></div>
-          <button onclick="return gestion('temoignages')" class="bg-cyan-200 p-2 rounded-md absolute w-full h-full top-0 hidden group-hover:block text-black text-xl font-bold">Gestion des Temoignages</button>
-
-        </div>
       </section>
 
       <!-- Tableau des utilisateurs -->
